@@ -1,0 +1,8 @@
+../Core/Src/main.c:90:8:rightOrderLight	2
+../Core/Src/main.c:63:5:main	1
+../Core/Src/main.c:100:8:reverseOrderLight	2
+../Core/Src/main.c:110:10:diagonallyOrderLight	2
+../Core/Src/main.c:122:10:randomOrderLight	3
+../Core/Src/main.c:163:6:SystemClock_Config	3
+../Core/Src/main.c:205:13:MX_GPIO_Init	1
+../Core/Src/main.c:238:6:Error_Handler	1

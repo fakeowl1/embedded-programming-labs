@@ -42,7 +42,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-const uint16_t GPIO_LIGHTS_PINS[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,54 +86,61 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  const uint16_t GPIO_PINS[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
+  void rightOrderLight() {
+      for (int i = 0; i < NUMBER_OF_PINS; i++) {
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_SET);
+        HAL_Delay(375);
 
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_RESET);
+        HAL_Delay(375);
+      }
+    }
+
+  void reverseOrderLight() {
+    for (int i = NUMBER_OF_PINS; i > 0; i--) {
+      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_SET);
+        HAL_Delay(375);
+
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_RESET);
+        HAL_Delay(375);
+      }
+    }
+
+    void diagonallyOrderLight() {
+      const int ORDER[] = {0, 2, 1, 3};
+
+      for (int i = 0; i < NUMBER_OF_PINS; i++) {
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[ORDER[i]], GPIO_PIN_SET);
+        HAL_Delay(375);
+
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[ORDER[i]], GPIO_PIN_RESET);
+        HAL_Delay(375);
+      }
+    }
+
+    void randomOrderLight(void) {
+      int order[NUMBER_OF_PINS] = {0, 1, 2, 3};
+
+      for (int i = NUMBER_OF_PINS - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int tmp = order[i];
+        order[i] = order[j];
+        order[j] = tmp;
+     }
+
+      for (int i = 0; i < NUMBER_OF_PINS; i++) {
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[order[i]], GPIO_PIN_SET);
+        HAL_Delay(375);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PINS[order[i]], GPIO_PIN_RESET);
+        HAL_Delay(375);
+      }
+    }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  void rightOrderLight() {
-    for (int i = 0; i < NUMBER_OF_PINS; i++) {
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_SET);
-      HAL_Delay(500);
 
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_RESET);
-      HAL_Delay(500);
-    }
-  }
-
-  void reverseOrderLight() {
-    for (int i = NUMBER_OF_PINS - 1; i >= 0; i--) {
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_SET);
-      HAL_Delay(500);
-
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[i], GPIO_PIN_RESET);
-      HAL_Delay(500);
-    }
-  }
-
-  void diagonallyOrderLight() {
-    const int ORDER[] = {0, 3, 1, 2};
-
-    for (int i = 0; i < NUMBER_OF_PINS; i++) {
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[ORDER[i]], GPIO_PIN_SET);
-      HAL_Delay(500);
-
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[ORDER[i]], GPIO_PIN_RESET);
-      HAL_Delay(500);
-    }
-  }
-
-  void randomOrderLight() {
-    for (int i = 0; i < NUMBER_OF_PINS; i++) {
-      int random_pin_i = rand() % NUMBER_OF_PINS;
-
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[random_pin_i], GPIO_PIN_SET);
-      HAL_Delay(500);
-
-      HAL_GPIO_WritePin(GPIOD, GPIO_PINS[random_pin_i], GPIO_PIN_RESET);
-      HAL_Delay(500);
-    }
-  }
 
 
   while (1)
@@ -207,19 +213,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_15, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PD12 PD13 PD15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_15;
+  /*Configure GPIO pins : PD12 PD13 PD14 PD15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PD14 */
-  GPIO_InitStruct.Pin = GPIO_PIN_14;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
